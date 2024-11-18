@@ -1,9 +1,8 @@
 package database
 
 import (
+	"gestor-horarios/utils"
 	"log"
-
-	"gestor-horarios/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,7 +11,14 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
-	dsn := "host=db user=postgres password=postgres dbname=gestor_horarios port=5432 sslmode=disable"
+	// Construir el DSN desde las variables de entorno
+	dsn := "host=" + utils.GetEnv("DB_HOST", "localhost") +
+		" user=" + utils.GetEnv("DB_USER", "postgres") +
+		" password=" + utils.GetEnv("DB_PASSWORD", "postgres") +
+		" dbname=" + utils.GetEnv("DB_NAME", "postgres") +
+		" port=" + utils.GetEnv("DB_PORT", "5432") +
+		" sslmode=disable"
+
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -20,7 +26,4 @@ func ConnectDB() {
 	}
 
 	log.Println("Conexión exitosa a la base de datos")
-
-	// Migrar modelos
-	DB.AutoMigrate(&models.Resource{}, &models.Service{}, &models.Reservation{})
 }

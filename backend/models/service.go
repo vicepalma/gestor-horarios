@@ -1,10 +1,12 @@
 package models
 
-import "gorm.io/gorm"
+import "time"
 
 type Service struct {
-	gorm.Model
-	Name        string `json:"name" gorm:"not null"`
-	Duration    int    `json:"duration" gorm:"not null"` // Duración en minutos
-	Description string `json:"description"`
+	ID          uint      `gorm:"primaryKey" json:"id"`
+	Name        string    `gorm:"size:100;not null" json:"name"`
+	Description string    `json:"description"`
+	Duration    int       `gorm:"not null" json:"duration"` // Duración en minutos
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
